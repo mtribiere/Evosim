@@ -6,6 +6,7 @@ project(EvoSim
 )
 
 add_compile_options(-std=gnu++14)
+add_link_options(-fopenmp)
 find_package(SDL2 REQUIRED)
 
 add_subdirectory(src/ui)

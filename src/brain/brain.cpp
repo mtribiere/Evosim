@@ -6,13 +6,15 @@ Brain::Brain(int seed)
     this->network = new Network();
 
     Layer* layer1 = new FullyConnected<Identity>(2, 4);
-    Layer* layer2 = new FullyConnected<Identity>(4, 3);
-    Layer* layer3 = new FullyConnected<Identity>(3, 2);
+    Layer* layer2 = new FullyConnected<Identity>(4, 4);
+    Layer* layer3 = new FullyConnected<Identity>(4, 3);
+    Layer* layer4 = new FullyConnected<Identity>(3, 2);
 
     // Add layers to the network object
     this->network->add_layer(layer1);
     this->network->add_layer(layer2);
     this->network->add_layer(layer3);
+    this->network->add_layer(layer4);
 
     this->network->set_output(new RegressionMSE());
     this->network->init(0.2, 0.5, seed);

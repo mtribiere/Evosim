@@ -1,4 +1,4 @@
-#include "entity.hpp"
+#include "pipe.hpp"
 
 Pipe::Pipe(int _posX) : Entity(_posX, 0, PIPE_WIDHT, PIPE_HEIGHT, 0, 200, 0)
 {

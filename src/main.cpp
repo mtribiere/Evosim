@@ -1,6 +1,8 @@
-#include "env.hpp"
-#include "entity.hpp"
 #include "ui.hpp"
+
+#include "env.hpp"
+#include "pipe.hpp"
+#include "bird.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -9,7 +11,7 @@ int main(int argc, char *argv[])
 
     BirdGroup *birdGroup = new BirdGroup(); 
     birdGroup->pipeGroup = pipeGroup;
-    birdGroup->spawnBirds(400);
+    birdGroup->spawnBirds(100);
 
     Environnement env = Environnement(0);
     env.registerEntity(pipeGroup);
