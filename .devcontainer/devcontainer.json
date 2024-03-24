@@ -1,6 +1,7 @@
 {
     "name": "Evosim_devcontainer",
     "build": { "dockerfile": "Dockerfile" },
+    "postCreateCommand": "cd ${containerWorkspaceFolder} && git submodule init",
   
     "customizations": {
       "vscode": {
