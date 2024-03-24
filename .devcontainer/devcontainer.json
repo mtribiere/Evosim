@@ -6,5 +6,12 @@
         "extensions": ["ms-vscode.cmake-tools"]
       }
     },
+    "features": {
+        "desktop-lite": {
+        "password": "vscode",
+        "webPort": "6080",
+        "vncPort": "5901"
+        }
+    },
     "forwardPorts": [6080]
-  }
+}
