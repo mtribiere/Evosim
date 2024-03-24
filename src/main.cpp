@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 
     BirdGroup *birdGroup = new BirdGroup(); 
     birdGroup->pipeGroup = pipeGroup;
-    birdGroup->spawnBirds(400);
+    birdGroup->spawnBirds(100);
 
     Environnement env = Environnement(0);
     env.registerEntity(pipeGroup);

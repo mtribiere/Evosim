@@ -8,8 +8,11 @@
 
 #define EPOCH_DURATION 10000
 #define BEST_SELECT_POPULATION 40
+#define THREAD_NUMBER 4
 
-#define OUTPUT_NOISE 0
+#define WIND_FORCE 0
+#define SENSOR_NOISE 0
+#define ACTUATOR_NOISE 0
 
 class Bird: public Entity{
     public:

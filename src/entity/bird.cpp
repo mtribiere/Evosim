@@ -1,5 +1,6 @@
 #include "bird.hpp"
 
+
 Bird::Bird(int brainSeed) : Entity(50, WINDOW_HEIGHT/2 ,BIRD_SIZE, BIRD_SIZE, 200, 200, 150)
 {
     this->brain = new Brain(brainSeed);
@@ -25,21 +26,37 @@ void Bird::step()
     if(!(this->isAlive))
         return;
 
-    
-    this->fitness++;
+    // Add the fitness for surviving
+    this->fitness += 10;
+
+    // Add the wind
+    #if WIND_FORCE > 0
+    this->posY += ((rand()%WIND_FORCE+1) - (WIND_FORCE/2));
+    #endif
 
     //Predict the next action
     Matrix inputFromNN = Matrix::Random(2,1);
 
-    inputFromNN(0, 0) = sigmoid(this->posY - this->pipeGroup->getLeadingPipe()->getGapMiddlePosY());
-    inputFromNN(1, 0) = sigmoid(this->pipeGroup->getLeadingPipe()->getPosX());
+    inputFromNN(0, 0) = sigmoid((this->posY - this->pipeGroup->getLeadingPipe()->getGapMiddlePosY()) 
+                            #if SENSOR_NOSE > 0
+                                + rand()%(SENSOR_NOISE + 1) - (SENSOR_NOISE / 2)
+                            #endif
+                        );
+    inputFromNN(1, 0) = sigmoid((this->pipeGroup->getLeadingPipe()->getPosX())
+                            #if SENSOR_NOSE > 0
+                                + rand()%(SENSOR_NOISE + 1) - (SENSOR_NOISE / 2)
+                            #endif
+                        );
     Matrix prediction = this->brain->getAction(inputFromNN);
 
+    // Perform the next action (Deduce fitness for energy consumption)
     if(sigmoid(prediction(0)) >= 0.5){
-        this->posY += (rand()%(OUTPUT_NOISE + 1) + 1);
+        this->posY += (rand()%(ACTUATOR_NOISE + 1) + 1);
+        this->fitness -= 4;
     }
     if(sigmoid(prediction(1)) > 0.5){
-        this->posY -= (rand()%(OUTPUT_NOISE + 1) + 1);
+        this->posY -= (rand()%(ACTUATOR_NOISE + 1) + 1);
+        this->fitness -= 4;
     }
 
     // Collision for the top and bottom of the screen
@@ -57,11 +74,8 @@ void Bird::step()
             this->isAlive = false;
             this->fitness -= 50;
         }
-    }else{
-        this->r = 200;
-        this->g = 200;
-        this->b = 150;
     }
+    
 
     //std::cout << prediction(0) << ";" << prediction(1) << std::endl;
 
