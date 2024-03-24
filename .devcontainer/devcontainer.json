@@ -1,5 +1,6 @@
 {
-    "image": "mcr.microsoft.com/devcontainers/base:debian",
+    "name": "Evosim_devcontainer",
+    "build": { "dockerfile": "Dockerfile" },
   
     "customizations": {
       "vscode": {
