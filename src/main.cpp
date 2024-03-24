@@ -1,6 +1,8 @@
-#include "env.hpp"
-#include "entity.hpp"
 #include "ui.hpp"
+
+#include "env.hpp"
+#include "pipe.hpp"
+#include "bird.hpp"
 
 int main(int argc, char *argv[])
 {

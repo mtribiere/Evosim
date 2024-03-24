@@ -1,4 +1,4 @@
-#include "entity.hpp"
+#include "bird.hpp"
 
 Bird::Bird(int brainSeed) : Entity(50, WINDOW_HEIGHT/2 ,BIRD_SIZE, BIRD_SIZE, 200, 200, 150)
 {
@@ -34,16 +34,12 @@ void Bird::step()
     inputFromNN(0, 0) = sigmoid(this->posY - this->pipeGroup->getLeadingPipe()->getGapMiddlePosY());
     inputFromNN(1, 0) = sigmoid(this->pipeGroup->getLeadingPipe()->getPosX());
     Matrix prediction = this->brain->getAction(inputFromNN);
-    //std::cout<<this->pipeGroup->getLeadingPipe()->getPosX() << std::endl;
-
-
-    //std::cout << sigmoid(prediction(0)) << ";" << sigmoid(prediction(1)) << std::endl;
 
     if(sigmoid(prediction(0)) >= 0.5){
-        this->posY += rand()%11;
+        this->posY += (rand()%(OUTPUT_NOISE + 1) + 1);
     }
     if(sigmoid(prediction(1)) > 0.5){
-        this->posY -= rand()%11;
+        this->posY -= (rand()%(OUTPUT_NOISE + 1) + 1);
     }
 
     // Collision for the top and bottom of the screen
@@ -117,13 +113,13 @@ void BirdGroup::step(){
         // Sort all the birds by fitness
         std::sort(this->entities.begin(), this->entities.end(), [](Bird* &a, Bird* &b){return (a->getFitness() > b->getFitness());});
 
-        double meanFitness = (double) this->entities[0]->getFitness();
-        for(int i = 1;i<this->entities.size();i++){
-            meanFitness = (double) ((double)(this->entities[i]->getFitness()) + meanFitness) / 2.0;
-           // std::cout << this->entities[i]->getFitness() << ";";
-        }
+        double meanFitness = std::accumulate(this->entities.begin(),  this->entities.end(), 
+                                            (double)this->entities[0]->getFitness(),
+                                            [](double a, Bird* &b){return (a + (double)b->getFitness());}
+                                        ) / (double) this->entities.size();
+        
         //std::cout << std::endl;
-        std::cout << "[EPOCH " << epoch << "] Mean fit " << meanFitness << std::endl;
+        std::cout << "[EPOCH " << epoch << "] Mean fit " << (double)meanFitness << std::endl;
 
         //Create a new population
         std::vector<Bird*> newPopulation;
