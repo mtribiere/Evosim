@@ -10,7 +10,7 @@ Bird::Bird(int brainSeed) : Entity(50, WINDOW_HEIGHT/2 ,BIRD_SIZE, BIRD_SIZE, 20
 void Bird::draw(UI *ui)
 {
     // If not alive, skip
-    if(!(this->isAlive))
+    if(!(this->alive))
         return;
     ui->drawRectangle(this->posX, this->posY, this->width, this->height, this->r, this->g, this->b);
 }
@@ -23,7 +23,7 @@ void Bird::step()
 {
 
     // If not alive, skip
-    if(!(this->isAlive))
+    if(!(this->alive))
         return;
 
     // Add the fitness for surviving
@@ -71,7 +71,7 @@ void Bird::step()
     if(this->pipeGroup->getLeadingPipe()->getPosX() < (this->posX + this->width)){
         if(this->posY < this->pipeGroup->getLeadingPipe()->getPosY() ||
             (this->posY+this->height) > this->pipeGroup->getLeadingPipe()->getPosY() +  this->pipeGroup->getLeadingPipe()->getHeight() ){
-            this->isAlive = false;
+            this->alive = false;
             this->fitness -= 50;
         }
     }
@@ -106,6 +106,10 @@ void Bird::setBrain(Brain *_brain)
     this->brain = _brain;
 }
 
+bool Bird::isAlive(){
+    return this->alive;
+}
+
 void BirdGroup::spawnBirds(int count) {
     for(int i = 0;i<count;i++){
         Bird* bird = new Bird(i);
@@ -120,9 +124,15 @@ void BirdGroup::step(){
     // Step all the birds
     EntityGroup::step();
 
+    // Check if all are dead
+    bool allDead = true;
+    for(Bird* toCheck: this->entities)
+        allDead = allDead && (!toCheck->isAlive());
+    
+
     // Check for the end of the epoch
     currentEpochDuration++;
-    if(currentEpochDuration >= EPOCH_DURATION){
+    if(currentEpochDuration >= EPOCH_DURATION || allDead){
         
         // Sort all the birds by fitness
         std::sort(this->entities.begin(), this->entities.end(), [](Bird* &a, Bird* &b){return (a->getFitness() > b->getFitness());});

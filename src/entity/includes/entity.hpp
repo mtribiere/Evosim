@@ -9,7 +9,7 @@
 
 #define PIPE_WIDHT 20
 #define PIPE_HEIGHT 100
-#define PIPE_SPACING 200
+#define PIPE_SPACING 400
 
 class Entity{
     public:

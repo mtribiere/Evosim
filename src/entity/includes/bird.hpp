@@ -7,10 +7,10 @@
 #define BIRD_SIZE 20
 
 #define EPOCH_DURATION 10000
-#define BEST_SELECT_POPULATION 40
+#define BEST_SELECT_POPULATION 200
 #define THREAD_NUMBER 4
 
-#define WIND_FORCE 0
+#define WIND_FORCE 10
 #define SENSOR_NOISE 0
 #define ACTUATOR_NOISE 0
 
@@ -21,6 +21,7 @@ class Bird: public Entity{
         void draw(UI* ui);
         void step();
         int getFitness();
+        bool isAlive();
 
         Brain* getBrain();
         void setBrain(Brain *_brain);
@@ -30,7 +31,7 @@ class Bird: public Entity{
     
     private:
         Brain* brain;
-        bool isAlive = true;
+        bool alive = true;
         int fitness = 0;
     
 };
