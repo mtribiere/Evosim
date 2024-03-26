@@ -15,6 +15,18 @@ void Bird::draw(UI *ui)
     ui->drawRectangle(this->posX, this->posY, this->width, this->height, this->r, this->g, this->b);
 }
 
+void Bird::performActionWithLatency(int action){
+    
+    // Add the action to the buffer
+    this->actionBuffer.push_back(action);
+
+    //If the action buffer is full
+    if(this->actionBuffer.size() >= RESPONSE_LATENCY){
+        this->posY += this->actionBuffer.front();
+        this->actionBuffer.erase(this->actionBuffer.begin());
+    }
+}
+
 double sigmoid(double x){
     return x / (1+abs(x));
 }
@@ -51,12 +63,12 @@ void Bird::step()
 
     // Perform the next action (Deduce fitness for energy consumption)
     if(sigmoid(prediction(0)) >= 0.5){
-        this->posY += (rand()%(ACTUATOR_NOISE + 1) + 1);
-        this->fitness -= 4;
+        this->performActionWithLatency((rand()%(ACTUATOR_NOISE + 1) + 1));
+        this->fitness -= 10;
     }
     if(sigmoid(prediction(1)) > 0.5){
-        this->posY -= (rand()%(ACTUATOR_NOISE + 1) + 1);
-        this->fitness -= 4;
+       this->performActionWithLatency(-(rand()%(ACTUATOR_NOISE + 1) + 1));
+        this->fitness -= 10;
     }
 
     // Collision for the top and bottom of the screen
@@ -118,6 +130,7 @@ void BirdGroup::spawnBirds(int count) {
         this->registerEntity(bird);
     }
 }
+
 
 void BirdGroup::step(){
 

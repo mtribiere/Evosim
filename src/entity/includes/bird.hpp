@@ -7,12 +7,13 @@
 #define BIRD_SIZE 20
 
 #define EPOCH_DURATION 10000
-#define BEST_SELECT_POPULATION 200
+#define BEST_SELECT_POPULATION 40
 #define THREAD_NUMBER 4
 
 #define WIND_FORCE 10
-#define SENSOR_NOISE 0
-#define ACTUATOR_NOISE 0
+#define SENSOR_NOISE 10
+#define ACTUATOR_NOISE 10
+#define RESPONSE_LATENCY 30
 
 class Bird: public Entity{
     public:
@@ -27,12 +28,16 @@ class Bird: public Entity{
         void setBrain(Brain *_brain);
         Bird *crossover(Bird* parent);
 
+        void performActionWithLatency(int action);
+
         PipeGroup* pipeGroup;
     
     private:
         Brain* brain;
         bool alive = true;
         int fitness = 0;
+
+        std::vector<int> actionBuffer;
     
 };
 
